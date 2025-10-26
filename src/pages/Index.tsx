@@ -27,10 +27,12 @@ interface Client {
 }
 
 const initialServices: Service[] = [
-  { id: 1, name: 'Монтаж кондиционера', basePrice: 8500, unit: 'шт' },
-  { id: 2, name: 'Монтаж вентиляции', basePrice: 12000, unit: 'м' },
-  { id: 3, name: 'Электромонтаж', basePrice: 1500, unit: 'точка' },
-  { id: 4, name: 'Прокладка кабеля', basePrice: 350, unit: 'м' },
+  { id: 1, name: 'Электромонтаж', basePrice: 1500, unit: 'точка' },
+  { id: 2, name: 'СКУД', basePrice: 5000, unit: 'шт' },
+  { id: 3, name: 'СКС', basePrice: 800, unit: 'точка' },
+  { id: 4, name: 'ОПС', basePrice: 3500, unit: 'шт' },
+  { id: 5, name: 'АПС', basePrice: 4000, unit: 'шт' },
+  { id: 6, name: 'Видеонаблюдение', basePrice: 6500, unit: 'камера' },
 ];
 
 export default function Index() {
@@ -310,11 +312,11 @@ export default function Index() {
                 </div>
               </CardHeader>
               <CardContent className="pt-6">
-                <Tabs defaultValue="services">
+                <Tabs defaultValue="calculator">
                   <TabsList className="grid w-full grid-cols-2 mb-6">
-                    <TabsTrigger value="services" className="gap-2">
-                      <Icon name="Wrench" size={18} />
-                      Услуги
+                    <TabsTrigger value="calculator" className="gap-2">
+                      <Icon name="Calculator" size={18} />
+                      Редактор калькуляции
                     </TabsTrigger>
                     <TabsTrigger value="clients" className="gap-2">
                       <Icon name="Users" size={18} />
@@ -322,14 +324,14 @@ export default function Index() {
                     </TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="services" className="space-y-4">
+                  <TabsContent value="calculator" className="space-y-4">
                     <Table>
                       <TableHeader>
                         <TableRow>
                           <TableHead>Услуга</TableHead>
                           <TableHead>Единица</TableHead>
                           <TableHead>Цена</TableHead>
-                          <TableHead>Действия</TableHead>
+                          <TableHead>Текущая</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
