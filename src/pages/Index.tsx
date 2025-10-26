@@ -259,7 +259,7 @@ export default function Index() {
           <div className="max-w-4xl mx-auto space-y-12">
             <section className="text-center space-y-4 animate-fade-in">
               <h2 className="text-5xl font-bold bg-gradient-to-r from-primary via-blue-600 to-accent bg-clip-text text-transparent">
-                Профессиональный монтаж
+                Монтажные работы
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Электромонтаж, слаботочные системы
