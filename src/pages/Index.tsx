@@ -231,34 +231,7 @@ export default function Index() {
 
             </section>
 
-            <section className="grid md:grid-cols-2 gap-6">
-              {services.map((service, index) => (
-                <Card 
-                  key={service.id} 
-                  className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-2 animate-fade-in"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-xl">{service.name}</CardTitle>
-                        <CardDescription className="mt-2">
-                          Базовая цена за {service.unit}
-                        </CardDescription>
-                      </div>
-                      <div className="bg-gradient-to-br from-primary to-accent p-2 rounded-lg">
-                        <Icon name="Wrench" className="text-white" size={20} />
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-3xl font-bold text-primary">
-                      {service.basePrice.toLocaleString('ru-RU')} ₽
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </section>
+
 
             <Card className="shadow-xl border-2 animate-scale-in">
               <CardHeader className="bg-gradient-to-r from-primary/5 to-accent/5">
