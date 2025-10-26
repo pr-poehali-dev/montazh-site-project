@@ -228,20 +228,7 @@ export default function Index() {
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Качественная установка систем кондиционирования, вентиляции и электромонтажные работы
               </p>
-              <div className="flex flex-wrap justify-center gap-4 pt-4">
-                <Badge variant="secondary" className="px-4 py-2 text-sm">
-                  <Icon name="Shield" size={16} className="mr-2" />
-                  Гарантия 2 года
-                </Badge>
-                <Badge variant="secondary" className="px-4 py-2 text-sm">
-                  <Icon name="Clock" size={16} className="mr-2" />
-                  Быстрый выезд
-                </Badge>
-                <Badge variant="secondary" className="px-4 py-2 text-sm">
-                  <Icon name="Award" size={16} className="mr-2" />
-                  Сертифицированные специалисты
-                </Badge>
-              </div>
+
             </section>
 
             <section className="grid md:grid-cols-2 gap-6">
