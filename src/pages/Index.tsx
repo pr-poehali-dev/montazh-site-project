@@ -26,6 +26,14 @@ interface Client {
   date: string;
 }
 
+interface Review {
+  id: number;
+  name: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
+
 const initialServices: Service[] = [
   { id: 1, name: 'Электромонтаж', basePrice: 1500, unit: 'точка' },
   { id: 2, name: 'СКУД', basePrice: 5000, unit: 'шт' },
@@ -38,6 +46,7 @@ const initialServices: Service[] = [
 export default function Index() {
   const [services, setServices] = useState<Service[]>(initialServices);
   const [clients, setClients] = useState<Client[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [selectedService, setSelectedService] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('1');
   const [calculatedPrice, setCalculatedPrice] = useState<number | null>(null);
@@ -49,6 +58,12 @@ export default function Index() {
     name: '',
     email: '',
     phone: ''
+  });
+
+  const [newReview, setNewReview] = useState({
+    name: '',
+    rating: 5,
+    comment: ''
   });
 
   const handleCalculate = () => {
@@ -75,6 +90,22 @@ export default function Index() {
       toast({
         title: 'Успешно',
         description: 'Заявка зарегистрирована. Мы свяжемся с вами.',
+      });
+    }
+  };
+
+  const handleAddReview = () => {
+    if (newReview.name && newReview.comment) {
+      const review: Review = {
+        id: Date.now(),
+        ...newReview,
+        date: new Date().toLocaleDateString('ru-RU')
+      };
+      setReviews([review, ...reviews]);
+      setNewReview({ name: '', rating: 5, comment: '' });
+      toast({
+        title: 'Спасибо за отзыв!',
+        description: 'Ваш отзыв опубликован',
       });
     }
   };
@@ -330,6 +361,87 @@ export default function Index() {
                 )}
               </CardContent>
             </Card>
+
+            <section className="space-y-6">
+              <div className="text-center">
+                <h3 className="text-3xl font-bold mb-2">Отзывы клиентов</h3>
+                <p className="text-muted-foreground">Что говорят о нас</p>
+              </div>
+
+              <Card className="shadow-lg border-2">
+                <CardHeader className="bg-gradient-to-r from-primary/5 to-accent/5">
+                  <CardTitle className="flex items-center gap-2">
+                    <Icon name="MessageSquare" size={24} />
+                    Оставить отзыв
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-6 space-y-4">
+                  <div>
+                    <Label htmlFor="reviewName">Ваше имя</Label>
+                    <Input
+                      id="reviewName"
+                      value={newReview.name}
+                      onChange={(e) => setNewReview({...newReview, name: e.target.value})}
+                      placeholder="Иван Иванов"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="reviewRating">Оценка</Label>
+                    <Select 
+                      value={newReview.rating.toString()} 
+                      onValueChange={(value) => setNewReview({...newReview, rating: parseInt(value)})}
+                    >
+                      <SelectTrigger id="reviewRating">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="5">⭐⭐⭐⭐⭐ Отлично</SelectItem>
+                        <SelectItem value="4">⭐⭐⭐⭐ Хорошо</SelectItem>
+                        <SelectItem value="3">⭐⭐⭐ Средне</SelectItem>
+                        <SelectItem value="2">⭐⭐ Плохо</SelectItem>
+                        <SelectItem value="1">⭐ Ужасно</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="reviewComment">Комментарий</Label>
+                    <Input
+                      id="reviewComment"
+                      value={newReview.comment}
+                      onChange={(e) => setNewReview({...newReview, comment: e.target.value})}
+                      placeholder="Расскажите о вашем опыте"
+                    />
+                  </div>
+                  <Button onClick={handleAddReview} className="w-full">
+                    <Icon name="Send" size={18} className="mr-2" />
+                    Отправить отзыв
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {reviews.length > 0 && (
+                <div className="grid md:grid-cols-2 gap-4">
+                  {reviews.map((review) => (
+                    <Card key={review.id} className="animate-fade-in">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <CardTitle className="text-lg">{review.name}</CardTitle>
+                            <CardDescription>{review.date}</CardDescription>
+                          </div>
+                          <div className="text-xl">
+                            {'⭐'.repeat(review.rating)}
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-muted-foreground">{review.comment}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </section>
           </div>
         ) : (
           <div className="max-w-6xl mx-auto animate-fade-in">
@@ -347,7 +459,7 @@ export default function Index() {
               </CardHeader>
               <CardContent className="pt-6">
                 <Tabs defaultValue="calculator">
-                  <TabsList className="grid w-full grid-cols-2 mb-6">
+                  <TabsList className="grid w-full grid-cols-3 mb-6">
                     <TabsTrigger value="calculator" className="gap-2">
                       <Icon name="Calculator" size={18} />
                       Редактор калькуляции
@@ -355,6 +467,10 @@ export default function Index() {
                     <TabsTrigger value="clients" className="gap-2">
                       <Icon name="Users" size={18} />
                       Клиенты ({clients.length})
+                    </TabsTrigger>
+                    <TabsTrigger value="reviews" className="gap-2">
+                      <Icon name="MessageSquare" size={18} />
+                      Отзывы ({reviews.length})
                     </TabsTrigger>
                   </TabsList>
 
@@ -479,6 +595,40 @@ export default function Index() {
                               <TableCell>{client.email}</TableCell>
                               <TableCell>{client.phone}</TableCell>
                               <TableCell>{client.date}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="reviews">
+                    {reviews.length === 0 ? (
+                      <div className="text-center py-12">
+                        <Icon name="MessageSquare" size={48} className="mx-auto text-muted-foreground mb-4" />
+                        <p className="text-muted-foreground">Отзывов пока нет</p>
+                      </div>
+                    ) : (
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Имя</TableHead>
+                            <TableHead>Оценка</TableHead>
+                            <TableHead>Комментарий</TableHead>
+                            <TableHead>Дата</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {reviews.map(review => (
+                            <TableRow key={review.id}>
+                              <TableCell className="font-medium">{review.name}</TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-1">
+                                  {'⭐'.repeat(review.rating)}
+                                </div>
+                              </TableCell>
+                              <TableCell className="max-w-md">{review.comment}</TableCell>
+                              <TableCell>{review.date}</TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
