@@ -96,12 +96,46 @@ export default function Index() {
     }
   };
 
+  const [newService, setNewService] = useState({
+    name: '',
+    basePrice: 0,
+    unit: ''
+  });
+  const [editingService, setEditingService] = useState<Service | null>(null);
+
   const updateServicePrice = (id: number, newPrice: number) => {
     setServices(services.map(s => s.id === id ? { ...s, basePrice: newPrice } : s));
     toast({
       title: 'Цена обновлена',
       description: 'Изменения сохранены',
     });
+  };
+
+  const addService = () => {
+    if (newService.name && newService.basePrice && newService.unit) {
+      const service: Service = {
+        id: Date.now(),
+        ...newService
+      };
+      setServices([...services, service]);
+      setNewService({ name: '', basePrice: 0, unit: '' });
+      toast({
+        title: 'Услуга добавлена',
+        description: 'Новая услуга добавлена в калькулятор',
+      });
+    }
+  };
+
+  const deleteService = (id: number) => {
+    setServices(services.filter(s => s.id !== id));
+    toast({
+      title: 'Услуга удалена',
+      description: 'Услуга удалена из калькулятора',
+    });
+  };
+
+  const updateService = (id: number, field: keyof Service, value: string | number) => {
+    setServices(services.map(s => s.id === id ? { ...s, [field]: value } : s));
   };
 
   return (
@@ -324,33 +358,97 @@ export default function Index() {
                     </TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="calculator" className="space-y-4">
+                  <TabsContent value="calculator" className="space-y-6">
+                    <Card className="bg-gradient-to-r from-primary/5 to-accent/5">
+                      <CardHeader>
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <Icon name="Plus" size={20} />
+                          Добавить новую услугу
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid md:grid-cols-4 gap-4">
+                          <div>
+                            <Label htmlFor="newServiceName">Название</Label>
+                            <Input
+                              id="newServiceName"
+                              value={newService.name}
+                              onChange={(e) => setNewService({...newService, name: e.target.value})}
+                              placeholder="Название услуги"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="newServiceUnit">Единица</Label>
+                            <Input
+                              id="newServiceUnit"
+                              value={newService.unit}
+                              onChange={(e) => setNewService({...newService, unit: e.target.value})}
+                              placeholder="шт, м, точка"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="newServicePrice">Цена</Label>
+                            <Input
+                              id="newServicePrice"
+                              type="number"
+                              value={newService.basePrice || ''}
+                              onChange={(e) => setNewService({...newService, basePrice: parseFloat(e.target.value) || 0})}
+                              placeholder="0"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={addService} className="w-full">
+                              <Icon name="Plus" size={18} className="mr-2" />
+                              Добавить
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
                     <Table>
                       <TableHeader>
                         <TableRow>
                           <TableHead>Услуга</TableHead>
                           <TableHead>Единица</TableHead>
-                          <TableHead>Цена</TableHead>
-                          <TableHead>Текущая</TableHead>
+                          <TableHead>Цена (₽)</TableHead>
+                          <TableHead className="text-right">Действия</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {services.map(service => (
                           <TableRow key={service.id}>
-                            <TableCell className="font-medium">{service.name}</TableCell>
-                            <TableCell>{service.unit}</TableCell>
                             <TableCell>
                               <Input
-                                type="number"
-                                defaultValue={service.basePrice}
-                                className="w-32"
-                                onBlur={(e) => updateServicePrice(service.id, parseFloat(e.target.value))}
+                                value={service.name}
+                                onChange={(e) => updateService(service.id, 'name', e.target.value)}
+                                className="font-medium"
                               />
                             </TableCell>
                             <TableCell>
-                              <Badge variant="outline" className="text-primary">
-                                {service.basePrice.toLocaleString('ru-RU')} ₽
-                              </Badge>
+                              <Input
+                                value={service.unit}
+                                onChange={(e) => updateService(service.id, 'unit', e.target.value)}
+                                className="w-24"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Input
+                                type="number"
+                                value={service.basePrice}
+                                onChange={(e) => updateService(service.id, 'basePrice', parseFloat(e.target.value) || 0)}
+                                className="w-32"
+                              />
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => deleteService(service.id)}
+                              >
+                                <Icon name="Trash2" size={16} className="mr-1" />
+                                Удалить
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}
