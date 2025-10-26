@@ -226,7 +226,7 @@ export default function Index() {
                 Профессиональный монтаж
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Качественная установка систем кондиционирования, вентиляции и электромонтажные работы
+                Электромонтаж, слаботочные системы
               </p>
 
             </section>
